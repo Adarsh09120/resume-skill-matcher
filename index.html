@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Resume Skill Matcher</title>
+    <style>
+        body { font-family: Arial; max-width: 800px; margin: 50px auto; padding: 20px; }
+        textarea { width: 100%; height: 150px; margin: 10px 0; padding: 10px; }
+        button { background: #007bff; color: white; padding: 10px 20px; border: none; cursor: pointer; border-radius: 5px; }
+        button:hover { background: #0056b3; }
+        .result { margin-top: 20px; padding: 20px; background: #f0f0f0; border-radius: 5px; }
+        h1 { color: #333; }
+    </style>
+</head>
+<body>
+    <h1>📊 Resume Skill Matcher</h1>
+    <p>Paste your resume skills and job description to see match percentage.</p>
+    
+    <label>Your Resume Skills:</label>
+    <textarea id="resume" placeholder="Example: Python, Machine Learning, scikit-learn, Pandas, Git"></textarea>
+    
+    <label>Job Description:</label>
+    <textarea id="job" placeholder="Example: Python & AI Developer. Required: Python, ML, Model Training, scikit-learn"></textarea>
+    
+    <button onclick="calculateMatch()">Calculate Match</button>
+    
+    <div class="result" id="result">Your match percentage will appear here...</div>
+    
+    <script>
+        function calculateMatch() {
+            let resume = document.getElementById('resume').value.toLowerCase();
+            let job = document.getElementById('job').value.toLowerCase();
+            
+            // Extract words (letters and numbers only)
+            let resumeWords = resume.match(/[a-z0-9]+/g) || [];
+            let jobWords = job.match(/[a-z0-9]+/g) || [];
+            
+            // Remove duplicates
+            resumeWords = [...new Set(resumeWords)];
+            jobWords = [...new Set(jobWords)];
+            
+            // Count matches
+            let matchCount = 0;
+            for(let word of jobWords) {
+                if(word.length > 2 && resumeWords.includes(word)) {
+                    matchCount++;
+                }
+            }
+            
+            let percentage = jobWords.length > 0 ? (matchCount / jobWords.length * 100).toFixed(1) : 0;
+            
+            let resultHTML = `<strong>📈 Match Percentage: ${percentage}%</strong><br><br>`;
+            resultHTML += `<strong>📋 Matching Skills:</strong><br>`;
+            
+            let matchedSkills = [];
+            for(let word of jobWords) {
+                if(word.length > 2 && resumeWords.includes(word)) {
+                    matchedSkills.push(word);
+                }
+            }
+            
+            if(matchedSkills.length > 0) {
+                resultHTML += matchedSkills.join(", ");
+            } else {
+                resultHTML += "No matching skills found.";
+            }
+            
+            document.getElementById('result').innerHTML = resultHTML;
+        }
+    </script>
+</body>
+</html>
